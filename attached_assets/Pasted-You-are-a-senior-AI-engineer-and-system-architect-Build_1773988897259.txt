@@ -1,0 +1,157 @@
+You are a senior AI engineer and system architect.
+
+Build a unique AI-powered onboarding system called **SkillGraph AI** that generates an adaptive training pathway for new hires.
+
+Unlike traditional skill-gap tools, this system must use a **knowledge graph approach** to model skills and calculate the optimal learning path.
+
+PROJECT GOAL
+
+The system should analyze a candidate's resume and a job description, construct a knowledge graph of skills, identify missing competencies, and compute the shortest learning path required to reach role competency.
+
+CORE CONCEPT
+
+Skills must not be treated as a simple list.
+
+Instead, represent skills as nodes in a knowledge graph where edges represent dependencies between concepts.
+
+Example:
+
+Python → Data Analysis → Machine Learning → Deep Learning
+
+The system must compute the optimal sequence of learning steps required to move from the candidate's current knowledge to the target role requirements.
+
+FEATURE REQUIREMENTS
+
+1. Resume Parsing
+
+Allow users to upload a resume (PDF or DOCX).
+
+Extract structured data including:
+
+* skills
+* tools
+* technologies
+* project experience
+* years of experience
+
+Use an LLM to convert resume text into structured JSON.
+
+2. Job Description Analysis
+
+Allow users to paste or upload a job description.
+
+Extract required skills and role competencies.
+
+Convert the output into structured JSON.
+
+Example:
+
+{
+"role": "Machine Learning Engineer",
+"required_skills": ["Python","Machine Learning","TensorFlow","Statistics"]
+}
+
+3. Knowledge Graph Builder
+
+Create a graph where:
+
+Nodes = skills or concepts
+Edges = dependency relationships between skills
+
+Example edges:
+
+Statistics → Machine Learning
+Linear Algebra → Neural Networks
+Python → Data Analysis
+
+Use a graph library such as NetworkX to construct and manage the graph.
+
+4. Candidate Skill Mapping
+
+Map extracted resume skills onto the knowledge graph.
+
+Mark nodes as:
+
+Known
+Partially Known
+Unknown
+
+Estimate skill depth based on resume context.
+
+5. Skill Gap Detection
+
+Compare candidate nodes with job requirement nodes.
+
+Identify missing knowledge nodes.
+
+6. Optimal Learning Path Algorithm
+
+Use graph traversal algorithms such as Dijkstra or shortest-path search to determine the minimal set of skills required to reach the job role competency.
+
+The output should be an ordered sequence of skills to learn.
+
+7. Learning Roadmap Generator
+
+Generate a structured roadmap including:
+
+Skill to learn
+Why it is required
+Recommended resources
+Estimated learning time
+Mini project for practice
+
+8. Interactive Skill Graph Visualization
+
+Create a UI where the knowledge graph is visually displayed.
+
+Nodes should be color-coded:
+
+Green = known skills
+Yellow = partial skills
+Red = missing skills
+
+Allow users to click nodes to view learning recommendations.
+
+Use React Flow or a similar graph visualization library.
+
+9. Web Interface
+
+Build a clean modern dashboard where users can:
+
+Upload resume
+Paste job description
+Run analysis
+View skill graph
+View optimized learning roadmap
+
+TECH STACK
+
+Frontend:
+Next.js
+React
+TailwindCSS
+React Flow (for graph visualization)
+
+Backend:
+Python FastAPI
+
+AI:
+OpenAI or Gemini API
+
+Graph Engine:
+NetworkX
+
+Parsing:
+pdf-parse or PyPDF
+
+EXPECTED OUTPUT
+
+The application must generate:
+
+1. Skill knowledge graph
+2. Skill gap report
+3. Optimal learning path
+4. Visual graph interface
+5. Adaptive training roadmap
+
+The code must be modular, clean, and well-documented.

@@ -1,0 +1,17 @@
+packages:
+  "@xyflow/react": "Interactive skill graph visualization"
+  "framer-motion": "Stunning animations for loading states and UI elements"
+  "dagre": "Automatic layout algorithm for the skill graph"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility to merge tailwind classes without style conflicts"
+  "lucide-react": "Beautiful iconography"
+
+images:
+  - path: "artifacts/skill-graph/public/images/hero-bg.png"
+    description: "Dark professional background with abstract glowing deep navy and electric blue data visualization lines, cybernetic network feel, extremely high quality, clean and minimalist"
+    aspect_ratio: "16:9"
+
+notes:
+  - Using @xyflow/react for the graph visualization.
+  - Adding fallback mock data in case the backend API isn't fully implemented or errors out, ensuring the UI remains functional and beautiful.
+  - Custom dark theme optimized for analytical, data-driven look.

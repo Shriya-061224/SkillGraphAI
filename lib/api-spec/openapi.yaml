@@ -1,15 +1,16 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: SkillGraph AI API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: skillgraph
+    description: SkillGraph AI analysis operations
 paths:
   /healthz:
     get:
@@ -24,6 +25,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /skillgraph/analyze:
+    post:
+      operationId: analyzeSkillGraph
+      tags: [skillgraph]
+      summary: Analyze resume and job description to build skill graph
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeRequest"
+      responses:
+        "200":
+          description: Skill graph analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +64,156 @@ components:
           type: string
       required:
         - status
-
+    AnalyzeRequest:
+      type: object
+      properties:
+        resumeText:
+          type: string
+          description: Resume content as plain text
+        jobDescription:
+          type: string
+          description: Job description content as plain text
+      required:
+        - resumeText
+        - jobDescription
+    SkillNode:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum: [known, partial, unknown]
+        category:
+          type: string
+        description:
+          type: string
+        yearsExperience:
+          type: number
+          nullable: true
+      required:
+        - id
+        - name
+        - status
+        - category
+        - description
+    SkillEdge:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        label:
+          type: string
+      required:
+        - source
+        - target
+        - label
+    LearningStep:
+      type: object
+      properties:
+        skillId:
+          type: string
+        skillName:
+          type: string
+        why:
+          type: string
+        resources:
+          type: array
+          items:
+            type: string
+        estimatedHours:
+          type: number
+        miniProject:
+          type: string
+        priority:
+          type: number
+      required:
+        - skillId
+        - skillName
+        - why
+        - resources
+        - estimatedHours
+        - miniProject
+        - priority
+    CandidateProfile:
+      type: object
+      properties:
+        name:
+          type: string
+        totalYearsExperience:
+          type: number
+        topSkills:
+          type: array
+          items:
+            type: string
+        summary:
+          type: string
+      required:
+        - name
+        - totalYearsExperience
+        - topSkills
+        - summary
+    JobProfile:
+      type: object
+      properties:
+        role:
+          type: string
+        company:
+          type: string
+        requiredSkills:
+          type: array
+          items:
+            type: string
+        summary:
+          type: string
+      required:
+        - role
+        - company
+        - requiredSkills
+        - summary
+    AnalysisResult:
+      type: object
+      properties:
+        candidateProfile:
+          $ref: "#/components/schemas/CandidateProfile"
+        jobProfile:
+          $ref: "#/components/schemas/JobProfile"
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillNode"
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillEdge"
+        learningPath:
+          type: array
+          items:
+            $ref: "#/components/schemas/LearningStep"
+        gapScore:
+          type: number
+          description: Percentage of required skills already known (0-100)
+        estimatedTotalHours:
+          type: number
+      required:
+        - candidateProfile
+        - jobProfile
+        - nodes
+        - edges
+        - learningPath
+        - gapScore
+        - estimatedTotalHours
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+        - message
