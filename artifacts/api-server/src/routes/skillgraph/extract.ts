@@ -4,7 +4,9 @@ import multer from "multer";
 import { openai } from "@workspace/integrations-openai-ai-server";
 
 const require = createRequire(import.meta.url);
-const pdfParse = require("pdf-parse") as (buf: Buffer) => Promise<{ text: string }>;
+// pdf-parse exports its function as .default in ESM interop or directly in CJS
+const _pdfParse = require("pdf-parse");
+const pdfParse = (_pdfParse.default ?? _pdfParse) as (buf: Buffer) => Promise<{ text: string }>;
 // @ts-ignore — mammoth has no @types package
 const mammoth = require("mammoth") as { extractRawText: (opts: { buffer: Buffer }) => Promise<{ value: string }> };
 
