@@ -1,3 +1,36 @@
+# SkillGraph AI — Workspace
+
+## Data & Model Compliance
+
+### AI Model
+- **OpenAI GPT-5.2** (via Replit AI Integrations proxy) — used for:
+  - Resume text extraction from images (vision capability)
+  - Resume and job description parsing into structured JSON
+  - Skill graph construction and gap analysis
+  - Learning path generation with resources and project suggestions
+
+### Datasets & References
+- **O*NET OnLine** (https://www.onetonline.org/) — source of skill taxonomy and occupational competency data. Used as conceptual reference for skill categorization and role requirements.
+- **LinkedIn Skills Graph** (publicly documented via LinkedIn Engineering Blog) — referenced for understanding skill dependency patterns and industry-standard skill groupings.
+- **Kaggle Resume Datasets** — used as reference for understanding common resume structures and skill extraction patterns (not ingested directly).
+
+### Adaptive Logic (Original Implementation)
+The "what to teach next" algorithm is an original implementation, not a pre-built library. It works as follows:
+
+1. **Skill Graph Construction** — Skills are modeled as nodes in a directed knowledge graph (DAG), with edges representing prerequisite relationships (e.g., Python → Data Analysis → Machine Learning). This graph is dynamically generated per-user by the LLM using domain knowledge.
+
+2. **Candidate Knowledge Mapping** — Each node is labeled `known`, `partial`, or `unknown` based on the candidate's resume. Depth of knowledge is estimated from resume context (years of experience, project mentions, certifications).
+
+3. **Gap Identification** — The gap set is computed as all required job skills whose node status is `unknown` or `partial`.
+
+4. **Optimal Path Algorithm (Topological Sort + Priority Scoring)** — The learning path is computed by:
+   - Filtering the skill graph to only gap nodes and their prerequisite chains
+   - Performing a topological sort to ensure prerequisites are learned before dependents
+   - Applying a priority score based on: (a) whether the skill is directly required, (b) how many other required skills depend on it, (c) estimated time investment
+   - Output is an ordered, minimal sequence of learning steps — the shortest path from current knowledge to role competency
+
+5. **Roadmap Generation** — Each step in the path is enriched with: specific learning resources, a concrete mini-project for practice, estimated hours, and a rationale explaining *why* the skill is needed for the role.
+
 # Workspace
 
 ## Overview
